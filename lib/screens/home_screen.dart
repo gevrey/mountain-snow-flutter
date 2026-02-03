@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../api/open_meteo_api.dart';
 import '../data/places.dart';
 import '../models/place.dart';
+import '../widgets/forecast_charts.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,6 +63,23 @@ class _HomeScreenState extends State<HomeScreen> {
     if (url == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No snow report link for this place yet.')),
+      );
+      return;
+    }
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to open link.')),
+      );
+    }
+  }
+
+  Future<void> _openAvalancheReport() async {
+    final url = _selected.avalancheReportUrl;
+    if (url == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No avalanche bulletin link for this place yet.')),
       );
       return;
     }
@@ -148,10 +166,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           const SizedBox(height: 12),
-          FilledButton.icon(
-            onPressed: _openSnowReport,
-            icon: const Icon(Icons.open_in_new),
-            label: const Text('Open latest snow report'),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: [
+              FilledButton.icon(
+                onPressed: _openSnowReport,
+                icon: const Icon(Icons.snowboarding),
+                label: const Text('Snow report'),
+              ),
+              OutlinedButton.icon(
+                onPressed: _openAvalancheReport,
+                icon: const Icon(Icons.warning_amber),
+                label: const Text('Avalanche bulletin'),
+              ),
+            ],
           ),
 
           const SizedBox(height: 20),
@@ -168,7 +197,11 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           else if (_forecast.isEmpty)
             const Text('No forecast data yet (or provider does not return snow metrics for this location).')
-          else
+          else ...[
+            // Graphs
+            ForecastCharts(days: _forecast),
+            const SizedBox(height: 16),
+            // Compact list for exact values
             ..._forecast.map((d) {
               final snow = d.snowfallCm;
               final depth = d.snowDepthMaxM;
@@ -204,10 +237,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               );
             }),
+          ],
 
           const SizedBox(height: 12),
           Text(
-            'Data: Open‑Meteo (forecast) + curated resort links (snow report).',
+            'Data: Open‑Meteo (forecast) + Météo‑France/WhiteRisk links (avalanche bulletin) + curated resort links (snow report).',
             style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
           ),
         ],

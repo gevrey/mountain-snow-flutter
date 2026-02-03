@@ -12,6 +12,10 @@ class Place {
   /// Optional “latest snow report” link (often resorts).
   final Uri? snowReportUrl;
 
+  /// Optional avalanche bulletin link.
+  /// We’ll open externally; parsing bulletins can be added later.
+  final Uri? avalancheReportUrl;
+
   const Place({
     required this.id,
     required this.name,
@@ -19,5 +23,6 @@ class Place {
     required this.lat,
     required this.lon,
     this.snowReportUrl,
+    this.avalancheReportUrl,
   });
 }
