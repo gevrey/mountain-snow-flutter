@@ -1,16 +1,37 @@
-# mountain_snow
+# Mountain Snow (Flutter)
 
-A new Flutter project.
+A lightweight Flutter app for **mountain + ski resort snow planning around Geneva**.
 
-## Getting Started
+## Features
+- **Places list**: both **peaks** and **ski resorts** (curated list around Geneva).
+- **7‑day forecast** per place (Open‑Meteo):
+  - Snowfall (cm/day)
+  - Snow depth max (m)
+  - Temperature min/max (°C)
+- **User‑friendly charts** (via `fl_chart`) + a compact day-by-day list.
+- **Quick links**:
+  - "Snow report" (opens the resort’s latest conditions page)
+  - "Avalanche bulletin" (opens the official bulletin)
+    - France: **Météo‑France mountain bulletin**
+    - Switzerland: **WhiteRisk**
 
-This project is a starting point for a Flutter application.
+## Data sources
+- Forecast: https://open-meteo.com/ (API: `api.open-meteo.com`)
+- Avalanche bulletins:
+  - https://meteofrance.com/meteo-montagne/
+  - https://whiterisk.ch/
+- Resort snow report links are curated (URLs may change).
 
-A few resources to get you started if this is your first Flutter project:
+## Run
+```bash
+flutter pub get
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Notes / Roadmap
+- Add per-place **region mapping** for avalanche bulletins (better than global links)
+- Add **search**, favorites, and offline caching
+- Optionally parse avalanche danger level (1–5) and show it in-app (currently links only)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## License
+TBD
